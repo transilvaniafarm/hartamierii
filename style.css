@@ -1,33 +1,75 @@
-/* Stilizare pentru harta */
+/* Harta va ocupa întreaga fereastră a paginii */
 #map {
-    height: 400px;
     width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
-/* Stiluri pentru formular */
-form {
-    margin-top: 20px;
+/* Stiluri pentru butonul de adăugare apicultor */
+.btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
 }
 
-form label {
-    margin-top: 10px;
-    display: block;
+.btn:hover {
+    background-color: #45a049;
 }
 
-form input {
-    margin-bottom: 10px;
+/* Stiluri pentru formularul de adăugare apicultor (ascuns inițial) */
+.form-container {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1000;
+    width: 300px;
+}
+
+.form-container input {
+    width: 100%;
     padding: 8px;
-    width: 100%;
+    margin: 5px 0;
 }
 
-form button {
+.form-container button {
+    width: 100%;
     padding: 10px;
+    margin-top: 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 5px;
 }
 
-form button:hover {
+.form-container button:hover {
     background-color: #45a049;
+}
+
+#contactLink {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 18px;
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+#contactLink:hover {
+    color: #45a049;
 }
