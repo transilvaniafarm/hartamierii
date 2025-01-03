@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harta Mierii</title>
-    <link rel="stylesheet" href="style.css">
+  <title>Harta Mierii</title>
+  <!-- Include Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    /* Stiluri pentru hartă */
+    #map {
+      height: 500px; /* Poți ajusta dimensiunea hărții */
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-    <h1>Bun venit pe Harta Mierii!</h1>
-    <p>Aceasta este o hartă a apicultorilor din România.</p>
-    <script src="script.js"></script>
+  <div id="map"></div> <!-- Aici va apărea harta -->
+  
+  <!-- Include Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="script.js"></script> <!-- Scriptul JavaScript -->
+</body>
 </body>
 </html>
