@@ -1,0 +1,1 @@
+console.log("Harta Mierii este funcțională!");
