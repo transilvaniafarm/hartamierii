@@ -1,19 +1,12 @@
 <!DOCTYPE html>
 <html lang="ro">
-    <head>
-    <!-- Adăugăm link-urile pentru stilul și scriptul Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-</head>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harta Mierii</title>
 
-    <!-- Script Google Maps (sau altă librărie de hartă) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
-
-    <!-- Adaugă alte meta tags sau stiluri aici -->
+    <!-- Adăugăm link-urile pentru stilul și scriptul Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         /* Stilizare pentru hartă */
         #map {
@@ -24,7 +17,7 @@
 </head>
 <body>
     <h1>Harta Mierii</h1>
-
+    
     <!-- Afișează harta -->
     <div id="map"></div>
 
@@ -33,7 +26,7 @@
         <label for="name">Nume:</label>
         <input type="text" id="name" required><br>
 
-        <label for="location">Locație (latitudine,longitudine):</label>
+        <label for="location">Locație (latitudine, longitudine):</label>
         <input type="text" id="location" required><br>
 
         <label for="contact">Contact (telefon/email):</label>
@@ -48,90 +41,44 @@
         <button type="submit">Adaugă apicultor</button>
     </form>
 
-    <!-- Încarcă Firebase și logica aplicației -->
-    <script type="module">
-        // Importă funcțiile de care ai nevoie din SDK-urile Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
-
-        // Configurația Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDJ2itwZ2rDm3TNCfGRbDuGmt1x2uEEM4M",
-            authDomain: "hartamierii-bff38.firebaseapp.com",
-            projectId: "hartamierii-bff38",
-            storageBucket: "hartamierii-bff38.firebasestorage.app",
-            messagingSenderId: "557082922037",
-            appId: "1:557082922037:web:9e72e423868db33a19757c",
-            measurementId: "G-DP3XXECJZ2"
-        };
-
-        // Inițializează Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
-
+    <!-- Încarcă scripturile pentru Leaflet și Firebase -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
         // Inițializare hartă
-        let map;
-        function initMap() {
-            // Poziția inițială (latitudine, longitudine)
-            const defaultLocation = { lat: 45.0, lng: 25.0 };
-            
-            // Creează harta
-            map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 6,
-                center: defaultLocation
-            });
+        const map = L.map('map').setView([45.0, 25.0], 6); // Setează centrul hărții la latitudine 45.0 și longitudine 25.0 (România)
 
-            // Adaugă un marker pe hartă
-            const marker = new google.maps.Marker({
-                position: defaultLocation,
-                map: map,
-                title: "Locația inițială"
-            });
-        }
+        // TileLayer pentru OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
         // Obține formularul și gestionează trimiterea acestuia
         const form = document.getElementById('apicultorForm');
-        form.addEventListener('submit', async (event) => {
+
+        form.addEventListener('submit', (event) => {
             event.preventDefault(); // Previne reîncărcarea paginii
 
+            // Preluare date din formular
             const name = document.getElementById('name').value;
             const location = document.getElementById('location').value.split(',');
             const contact = document.getElementById('contact').value;
             const honeyType = document.getElementById('honeyType').value;
             const otherProducts = document.getElementById('otherProducts').value;
 
-            // Verifică că locația conține două valori (latitudine, longitudine)
+            // Verifică dacă locația conține latitudine și longitudine
             if (location.length === 2) {
                 const lat = parseFloat(location[0]);
                 const lng = parseFloat(location[1]);
 
-                // Actualizează harta cu noua locație
-                map.setCenter({ lat, lng });
-                const marker = new google.maps.Marker({
-                    position: { lat, lng },
-                    map: map,
-                    title: name
-                });
+                // Adaugă un marker pe hartă la locația specificată
+                const marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup(`<b>${name}</b><br>${contact}<br>${honeyType ? 'Miere: ' + honeyType : ''}<br>${otherProducts ? 'Alte produse: ' + otherProducts : ''}`);
 
-                try {
-                    // Adaugă apicultorul în Firestore
-                    await addDoc(collection(db, "apicultori"), {
-                        name: name,
-                        location: { lat, lng },
-                        contact: contact,
-                        honeyType: honeyType,
-                        otherProducts: otherProducts || "N/A"
-                    });
+                // Resetează formularul
+                form.reset();
 
-                    alert('Apicultorul a fost adăugat cu succes!');
-                    form.reset(); // Resetează formularul
-
-                } catch (error) {
-                    console.error("Eroare la adăugarea apicultorului: ", error);
-                    alert('A apărut o eroare!');
-                }
+                // Alertă pentru confirmare
+                alert('Apicultorul a fost adăugat pe hartă!');
             } else {
                 alert('Locația trebuie să fie un format corect (latitudine, longitudine).');
             }
