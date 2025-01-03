@@ -4,40 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harta Mierii</title>
-
-    <!-- Legătura către fișierul CSS -->
+    <!-- Include fișierul CSS -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Include scripturile externe -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Include scripturile necesare pentru Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
     <h1>Harta Mierii</h1>
     
-    <!-- Afișează harta -->
+    <!-- Harta -->
     <div id="map"></div>
 
-    <!-- Formularul pentru adăugarea apicultorului -->
-    <form id="apicultorForm">
-        <label for="name">Nume:</label>
-        <input type="text" id="name" required><br>
+    <!-- Butonul pentru adăugarea apicultorului -->
+    <button id="addApicultorBtn" class="btn">Adaugă Apicultor</button>
 
-        <label for="location">Locație (latitudine, longitudine):</label>
-        <input type="text" id="location" required><br>
+    <!-- Formularul pentru adăugarea apicultorului (ascuns inițial) -->
+    <div id="apicultorFormContainer" class="form-container">
+        <form id="apicultorForm">
+            <label for="name">Nume:</label>
+            <input type="text" id="name" required><br>
 
-        <label for="contact">Contact (telefon/email):</label>
-        <input type="text" id="contact" required><br>
+            <label for="location">Locație (latitudine, longitudine):</label>
+            <input type="text" id="location" required><br>
 
-        <label for="honeyType">Tip miere:</label>
-        <input type="text" id="honeyType"><br>
+            <label for="contact">Contact (telefon/email):</label>
+            <input type="text" id="contact" required><br>
 
-        <label for="otherProducts">Alte produse:</label>
-        <input type="text" id="otherProducts"><br>
+            <label for="honeyType">Tip miere:</label>
+            <input type="text" id="honeyType"><br>
 
-        <button type="submit">Adaugă apicultor</button>
-    </form>
+            <label for="otherProducts">Alte produse:</label>
+            <input type="text" id="otherProducts"><br>
 
-    <!-- Legătura către fișierul JS -->
+            <button type="submit">Adaugă apicultor</button>
+            <button type="button" id="cancelBtn">Anulează</button>
+        </form>
+    </div>
+
+    <!-- Link pentru pagina de contact -->
+    <a href="contact.html" id="contactLink">Contact</a>
+
+    <!-- Include fișierul JavaScript -->
     <script src="script.js" type="module"></script>
 </body>
 </html>
