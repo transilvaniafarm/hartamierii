@@ -18,6 +18,27 @@
   <!-- Include Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="script.js"></script> <!-- Scriptul JavaScript -->
+  <div class="form-container">
+  <h2>Înscriere apicultor</h2>
+  <form id="apicultor-form">
+    <label for="name">Nume Apicultor:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="location">Locație (latitudine, longitudine):</label>
+    <input type="text" id="location" name="location" placeholder="Ex: 45.0, 25.0" required>
+
+    <label for="contact">Contact (Telefon sau Email):</label>
+    <input type="text" id="contact" name="contact" required>
+
+    <label for="honeyType">Tip Miere:</label>
+    <input type="text" id="honeyType" name="honeyType" required>
+
+    <label for="otherProducts">Alte Produse (opțional):</label>
+    <input type="text" id="otherProducts" name="otherProducts">
+
+    <button type="submit">Înscrie</button>
+  </form>
+</div>
 </body>
 </body>
 </html>
