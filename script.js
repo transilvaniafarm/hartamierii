@@ -11,3 +11,40 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 L.marker([45.0, 25.0]).addTo(map)
   .bindPopup("Apicultor 1")
   .openPopup();
+// Obținem referința la formular
+const form = document.getElementById('apicultor-form');
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  // Colectăm datele din formular
+  const name = document.getElementById('name').value;
+  const location = document.getElementById('location').value.split(',');
+  const contact = document.getElementById('contact').value;
+  const honeyType = document.getElementById('honeyType').value;
+  const otherProducts = document.getElementById('otherProducts').value;
+
+  // Validăm locația (latitudine, longitudine)
+  if (location.length !== 2 || isNaN(location[0]) || isNaN(location[1])) {
+    alert("Locația trebuie să fie formată din două valori numerice (latitudine, longitudine).");
+    return;
+  }
+
+  // Adăugăm datele în Firestore
+  try {
+    await db.collection('apicultori').add({
+      name: name,
+      location: {
+        lat: parseFloat(location[0]),
+        lng: parseFloat(location[1]),
+      },
+      contact: contact,
+      honeyType: honeyType,
+      otherProducts: otherProducts || "N/A", // Dacă nu sunt produse adăugate, se pune "N/A"
+    });
+    alert('Apicultorul a fost adăugat cu succes!');
+    form.reset();
+  } catch (error) {
+    console.error('Eroare la adăugarea apicultorului:', error);
+  }
+});
