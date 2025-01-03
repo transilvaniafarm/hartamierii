@@ -47,4 +47,26 @@ form.addEventListener('submit', async (event) => {
   } catch (error) {
     console.error('Eroare la adăugarea apicultorului:', error);
   }
+  // Funcția care încarcă apicultorii pe hartă
+const loadApicultori = async () => {
+  const apicultoriSnapshot = await db.collection('apicultori').get();
+  apicultoriSnapshot.forEach(doc => {
+    const apicultor = doc.data();
+    const { lat, lng } = apicultor.location;
+    const { name, contact, honeyType, otherProducts } = apicultor;
+
+    // Adăugăm marker pe hartă
+    L.marker([lat, lng])
+      .addTo(map)
+      .bindPopup(`
+        <b>${name}</b><br>
+        <strong>Contact:</strong> ${contact}<br>
+        <strong>Tip Miere:</strong> ${honeyType}<br>
+        <strong>Alte Produse:</strong> ${otherProducts}
+      `);
+  });
+};
+
+// Încarcă apicultorii la încărcarea paginii
+loadApicultori();
 });
