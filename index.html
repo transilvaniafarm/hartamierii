@@ -1,44 +1,95 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <title>Harta Mierii</title>
-  <!-- Include Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
-    /* Stiluri pentru hartă */
-    #map {
-      height: 500px; /* Poți ajusta dimensiunea hărții */
-      width: 100%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harta Mierii</title>
+    <!-- Adaugă alte meta tags sau stiluri aici -->
 </head>
 <body>
-  <div id="map"></div> <!-- Aici va apărea harta -->
-  
-  <!-- Include Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="script.js"></script> <!-- Scriptul JavaScript -->
-  <div class="form-container">
-  <h2>Înscriere apicultor</h2>
-  <form id="apicultor-form">
-    <label for="name">Nume Apicultor:</label>
-    <input type="text" id="name" name="name" required>
+    <h1>Harta Mierii</h1>
+    
+    <!-- Formularul pentru adăugarea apicultorului -->
+    <form id="apicultorForm">
+        <label for="name">Nume:</label>
+        <input type="text" id="name" required><br>
 
-    <label for="location">Locație (latitudine, longitudine):</label>
-    <input type="text" id="location" name="location" placeholder="Ex: 45.0, 25.0" required>
+        <label for="location">Locație (latitudine,longitudine):</label>
+        <input type="text" id="location" required><br>
 
-    <label for="contact">Contact (Telefon sau Email):</label>
-    <input type="text" id="contact" name="contact" required>
+        <label for="contact">Contact (telefon/email):</label>
+        <input type="text" id="contact" required><br>
 
-    <label for="honeyType">Tip Miere:</label>
-    <input type="text" id="honeyType" name="honeyType" required>
+        <label for="honeyType">Tip miere:</label>
+        <input type="text" id="honeyType"><br>
 
-    <label for="otherProducts">Alte Produse (opțional):</label>
-    <input type="text" id="otherProducts" name="otherProducts">
+        <label for="otherProducts">Alte produse:</label>
+        <input type="text" id="otherProducts"><br>
 
-    <button type="submit">Înscrie</button>
-  </form>
-</div>
-</body>
+        <button type="submit">Adaugă apicultor</button>
+    </form>
+
+    <!-- Încarcă Firebase și logica aplicației -->
+    <script type="module">
+        // Importă funcțiile de care ai nevoie din SDK-urile Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+
+        // Configurația Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ2itwZ2rDm3TNCfGRbDuGmt1x2uEEM4M",
+            authDomain: "hartamierii-bff38.firebaseapp.com",
+            projectId: "hartamierii-bff38",
+            storageBucket: "hartamierii-bff38.firebasestorage.app",
+            messagingSenderId: "557082922037",
+            appId: "1:557082922037:web:9e72e423868db33a19757c",
+            measurementId: "G-DP3XXECJZ2"
+        };
+
+        // Inițializează Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // Obține formularul și gestionează trimiterea acestuia
+        const form = document.getElementById('apicultorForm');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Previne reîncărcarea paginii
+
+            const name = document.getElementById('name').value;
+            const location = document.getElementById('location').value.split(',');
+            const contact = document.getElementById('contact').value;
+            const honeyType = document.getElementById('honeyType').value;
+            const otherProducts = document.getElementById('otherProducts').value;
+
+            // Verifică că locația conține două valori (latitudine, longitudine)
+            if (location.length === 2) {
+                const lat = parseFloat(location[0]);
+                const lng = parseFloat(location[1]);
+
+                try {
+                    // Adaugă apicultorul în Firestore
+                    await addDoc(collection(db, "apicultori"), {
+                        name: name,
+                        location: { lat, lng },
+                        contact: contact,
+                        honeyType: honeyType,
+                        otherProducts: otherProducts || "N/A"
+                    });
+
+                    alert('Apicultorul a fost adăugat cu succes!');
+                    form.reset(); // Resetează formularul
+
+                } catch (error) {
+                    console.error("Eroare la adăugarea apicultorului: ", error);
+                    alert('A apărut o eroare!');
+                }
+            } else {
+                alert('Locația trebuie să fie un format corect (latitudine, longitudine).');
+            }
+        });
+    </script>
 </body>
 </html>
